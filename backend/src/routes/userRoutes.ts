@@ -1,15 +1,13 @@
-import express, { RequestHandler, Router, Request, Response } from 'express';
-import app from '../index';
+import express, { RequestHandler, Router } from 'express';
 import { addCredits, createUser } from '../controllers/userController';
 import authMiddleware from '../middleware/authMiddleware';
-// import userController from '../controllers/userController';
-
+import { validateRequest } from '../middleware/validateRequest';
+import { createUserSchema, addCreditsSchema } from '../validations/schemas';
 
 const router: Router = express.Router();
-// User management routes (protected)
-router.use(authMiddleware as RequestHandler);
-router.post('/create', createUser as RequestHandler );
-router.post('/credits', addCredits as RequestHandler);
 
+router.use(authMiddleware as RequestHandler);
+router.post('/create', validateRequest(createUserSchema) as RequestHandler, createUser as RequestHandler);
+router.post('/credits', validateRequest(addCreditsSchema) as RequestHandler, addCredits as RequestHandler);
 
 export default router;

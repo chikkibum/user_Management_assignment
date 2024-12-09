@@ -2,8 +2,13 @@ import User from '../models/User';
 import jwt from 'jsonwebtoken';
 import { Request, Response } from 'express';
 import dotenv from 'dotenv';
+import { signupSchema, loginSchema } from '../validations/schemas';
+import { TypeOf } from 'zod';
 
 dotenv.config();
+
+type SignupInput = TypeOf<typeof signupSchema>;
+type LoginInput = TypeOf<typeof loginSchema>;
 
 const generateToken = (id: string) => {
   return jwt.sign({ id }, process.env.JWT_SECRET as string, {
@@ -13,7 +18,7 @@ const generateToken = (id: string) => {
 
 export const signup = async (req: Request, res: Response) => {
   try {
-    const { name, email, password } = req.body as { name: string; email: string; password: string };
+    const { name, email, password } = req.body as SignupInput;
 
     const userExists = await User.findOne({ email });
     if (userExists) {
@@ -37,14 +42,14 @@ export const signup = async (req: Request, res: Response) => {
       role: user.role,
       token: generateToken(user._id as string)
     });
-  } catch (error: any) {
-    res.json({ message: error.message });
+  } catch (error) {
+    res.status(500).json({ message: error instanceof Error ? error.message : 'An unknown error occurred' });
   }
 };
 
 export const login = async (req: Request, res: Response) => {
   try {
-    const { email, password } = req.body as { email: string; password: string };
+    const { email, password } = req.body as LoginInput;
     const user = await User.findOne({ email });
 
     if (user && (await user.comparePassword(password))) {
@@ -58,7 +63,7 @@ export const login = async (req: Request, res: Response) => {
     } else {
       res.status(401).json({ message: 'Invalid email or password' });
     }
-  } catch (error: any) {
-    res.status(500).json({ message: error.message });
+  } catch (error) {
+    res.status(500).json({ message: error instanceof Error ? error.message : 'An unknown error occurred' });
   }
 };
