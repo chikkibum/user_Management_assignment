@@ -54,7 +54,7 @@ A TypeScript-based Express.js backend service with MongoDB integration, authenti
 ```
 ## Video Demo
 
-
+[demo.webm](https://github.com/user-attachments/assets/a0473656-491e-45da-b32d-af20bf062e3f)
 
 Click the image above to watch a demonstration of the project features and functionality.
 
