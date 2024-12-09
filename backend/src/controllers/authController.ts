@@ -28,8 +28,7 @@ export const signup = async (req: Request, res: Response) => {
       role: (await User.countDocuments({})) === 0 ? 'admin' : 'user'
     });
 
-    const countDocuments = await User.countDocuments({});
-    console.log(countDocuments);
+  
 
     res.json({
       _id: user._id,
