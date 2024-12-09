@@ -9,8 +9,24 @@ const Signup = () => {
     const [error, setError] = useState('');
     const navigate = useNavigate();
 
-
-
+    const handleSignup = async (e) => {
+        e.preventDefault();
+        try {
+            const response = await fetch("http://localhost:3000/api/auth/signup", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ name, email, password }),
+            });
+            const data = await response.json();
+            if (response.ok) {
+                navigate("/dashboard");
+            } else {
+                setError(data.message);
+            }
+        } catch (error) {
+            setError("An error occurred while signing up.");
+        }
+    }
 
     return (
       <div className="flex h-screen items-center justify-center bg-gray-100">
@@ -75,6 +91,7 @@ const Signup = () => {
               <button 
                 type="submit" 
                className="w-full bg-purple-400 text-white py-2 rounded-md hover:bg-blue-400 transition"
+               onClick={handleSignup}
               >
                 Sign up
               </button>

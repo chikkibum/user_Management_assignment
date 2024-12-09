@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import { useContext } from 'react';
 import { useNavigate, useLocation } from "react-router-dom";
 import { Users, Sun, Moon } from "lucide-react"; // Import icons
 import ThemeContext from '../ThemeContext';
@@ -7,6 +7,7 @@ const Header = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { theme, toggleTheme } = useContext(ThemeContext);
+  const userRole = localStorage.getItem('userRole');
 
   // Function to handle navigation for the User Settings modal
   const toggleUserSettings = () => {
@@ -16,6 +17,9 @@ const Header = () => {
   const toggleUserManagement = () => {
     navigate('/dashboard/usermanagement');
   };
+
+  // Capitalize first letter of role for display
+  const displayRole = userRole ? userRole.charAt(0).toUpperCase() + userRole.slice(1) : 'User';
 
   return (
     <>
@@ -31,7 +35,7 @@ const Header = () => {
 
         {/* Center Section */}
         <div className="absolute left-1/2 transform -translate-x-1/2">
-          <h1 className="text-gray-600 dark:text-gray-300 text-xl font-bold">Admin</h1>
+          <h1 className="text-gray-600 dark:text-gray-300 text-xl font-bold">{displayRole}</h1>
         </div>
 
         {/* Right Section */}
