@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import User from '../models/User';
 
 export const signupSchema = z.object({
   name: z.string()
@@ -7,11 +8,23 @@ export const signupSchema = z.object({
     .trim()
     .refine(val => /^[a-zA-Z0-9\s_-]+$/.test(val), {
       message: 'Name can only contain letters, numbers, spaces, underscores, and hyphens'
+    })
+    .refine(async (name) => {
+      const existingUser = await User.findOne({ name });
+      return !existingUser;
+    }, {
+      message: 'Name is already taken'
     }),
   email: z.string()
     .email('Invalid email format')
     .trim()
-    .toLowerCase(),
+    .toLowerCase()
+    .refine(async (email) => {
+      const existingUser = await User.findOne({ email });
+      return !existingUser;
+    }, {
+      message: 'Email is already registered'
+    }),
   password: z.string()
     .min(6, 'Password must be at least 6 characters')
     .max(100, 'Password cannot exceed 100 characters')
@@ -41,11 +54,23 @@ export const createUserSchema = z.object({
     .trim()
     .refine(val => /^[a-zA-Z0-9\s_-]+$/.test(val), {
       message: 'Name can only contain letters, numbers, spaces, underscores, and hyphens'
+    })
+    .refine(async (name) => {
+      const existingUser = await User.findOne({ name });
+      return !existingUser;
+    }, {
+      message: 'Name is already taken'
     }),
   email: z.string()
     .email('Invalid email format')
     .trim()
-    .toLowerCase(),
+    .toLowerCase()
+    .refine(async (email) => {
+      const existingUser = await User.findOne({ email });
+      return !existingUser;
+    }, {
+      message: 'Email is already registered'
+    }),
   password: z.string()
     .min(6, 'Password must be at least 6 characters')
     .max(100, 'Password cannot exceed 100 characters')
