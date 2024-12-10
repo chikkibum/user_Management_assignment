@@ -13,9 +13,10 @@ const authMiddleware = async (req: Request, res: Response, next: NextFunction) =
     }
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as { id: string };
+
     console.log(decoded);
     const user = await User.findById(decoded.id);
-
+    console.log(user)
     if (!user) {
       return res.status(401).json({ message: 'User not found' });
     }

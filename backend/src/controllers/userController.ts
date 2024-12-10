@@ -55,14 +55,15 @@ export const createUser = async (req: Request, res: Response) => {
 
 export const addCredits = async (req: Request, res: Response) => {
   try {
-    const { userId, credits } = req.body as AddCreditsBody;
-    const user = await User.findById(userId);
-
+    // console.log(req.body);
+    const { username, amount } = req.body;
+    const user = await User.findOne({ name: username });
+    // console.log(user);
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
 
-    user.credits += credits;
+    user.credits += amount;
     await user.save();
 
     res.json({ message: 'Credits added successfully', credits: user.credits });
